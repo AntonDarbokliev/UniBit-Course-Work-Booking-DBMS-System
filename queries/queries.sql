@@ -1,3 +1,28 @@
+-- Тригери:
+
+
+-- Проверяваме дали букинга е направен извън работните часове на залата
+
+CREATE TRIGGER validate_meeting_room_hours
+BEFORE INSERT OR UPDATE ON BOOKING
+FOR EACH ROW
+DECLARE
+    var_workingFrom TIMESTAMP;
+    var_workingTo TIMESTAMP;
+BEGIN 
+    SELECT workingFrom, workingTo
+    INTO var_workingFrom, var_workingTo
+    FROM MEETING_ROOM mr
+    WHERE mr.meeting_room_id = :NEW.meeting_room_id;
+    
+    IF TO_CHAR(:NEW.startDate, 'HH24:MI:SS') < var_workingFrom 
+        OR TO_CHAR(:NEW.endDate, 'HH24:MI:SS') > var_workingTo THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Invalid booking time.');
+    END IF;
+END;
+
+-- Заявки:
+
 -- Вземи удобства на зала с id = 1
 SELECT mr.meeting_room_name, a.name AS amenity_name
 FROM MEETING_ROOM mr
