@@ -84,11 +84,11 @@ WHERE member_id IN (
 );
 
 -- Вземи мембърите, които са букинг чуастници и са създавали букинги
-SELECT m.member_id, m.firstName, m.lastName, '!J740B5;' AS role
+SELECT m.member_id, m.firstName, m.lastName
 FROM MEMBER m
 WHERE m.member_id IN (SELECT created_by FROM BOOKING)
 UNION
-SELECT m.member_id, m.firstName, m.lastName, '#G0AB=8:' AS role
+SELECT m.member_id, m.firstName, m.lastName
 FROM MEMBER m
 WHERE m.member_id IN (SELECT member_id FROM BOOKING_PARTICIPANT);
 
