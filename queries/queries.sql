@@ -24,7 +24,7 @@ END;
 -- Заявки:
 
 -- Вземи удобства на зала с id = 1
-SELECT mr.meeting_room_name, a.name AS amenity_name
+SELECT a.name AS amenity_name
 FROM MEETING_ROOM mr
 JOIN ROOM_AMENITY ra ON mr.meeting_room_id = ra.meeting_room_id
 JOIN AMENITY a ON ra.amenity_id = a.amenity_id
@@ -43,7 +43,6 @@ JOIN MEMBER m ON b.created_by = m.member_id;
 
 -- Вземи букинг с id = 1 и покажи участниците в него
 SELECT
-    b.booking_id,
     mr.meeting_room_name,
     m.firstName,
     m.lastName
@@ -58,19 +57,19 @@ SELECT
     mr.meeting_room_name,
     COUNT(b.booking_id) AS total_bookings
 FROM MEETING_ROOM mr
-LEFT JOIN BOOKING b ON mr.meeting_room_id = b.meeting_room_id
-AND b.startDate > TRUNC(SYSDATE) -- TRUNC маха часът и остава само дата т.е началото на деня
+JOIN BOOKING b ON mr.meeting_room_id = b.meeting_room_id
+WHERE b.startDate > TRUNC(SYSDATE) -- TRUNC маха часът и остава само дата т.е началото на деня
 GROUP BY mr.meeting_room_id, mr.meeting_room_name
 ORDER BY total_bookings DESC;
 
--- Покажи лист от зали, които имат над 5 букинга
+-- Покажи лист от зали, които имат над 1 букинг
 SELECT
     mr.meeting_room_name,
     COUNT(b.booking_id) AS total_bookings
 FROM MEETING_ROOM mr
 JOIN BOOKING b ON mr.meeting_room_id = b.meeting_room_id
-GROUP BY mr.meeting_room_id, mr.meeting_room_name
-HAVING COUNT(b.booking_id) > 5;
+GROUP BY mr.meeting_room_name
+HAVING COUNT(b.booking_id) > 1;
 
 -- Покажи лист от организации, заедно с броят посетители във всяка
 SELECT
@@ -100,22 +99,13 @@ WHERE NOT EXISTS (
     WHERE b.meeting_room_id = mr.meeting_room_id
 );
 
--- Показва лист от букинги, направени от мембър
+-- Показва лист от мембъри, направили букинг
 SELECT member_id, firstName, lastName
 FROM MEMBER
 WHERE member_id IN (
     SELECT DISTINCT created_by
     FROM BOOKING
 );
-
--- Вземи мембърите, които са букинг чуастници и са създавали букинги
-SELECT m.member_id, m.firstName, m.lastName
-FROM MEMBER m
-WHERE m.member_id IN (SELECT created_by FROM BOOKING)
-UNION
-SELECT m.member_id, m.firstName, m.lastName
-FROM MEMBER m
-WHERE m.member_id IN (SELECT member_id FROM BOOKING_PARTICIPANT);
 
 -- Връща лист от участници в букунги, които не са създавали букинги
 SELECT member_id FROM BOOKING_PARTICIPANT
