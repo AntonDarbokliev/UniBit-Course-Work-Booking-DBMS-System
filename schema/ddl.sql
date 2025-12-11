@@ -1,23 +1,23 @@
 CREATE TABLE ORGANIZATION (
     organization_id INTEGER PRIMARY KEY,
-    address VARCHAR,
+    address VARCHAR2(100),
     created_at TIMESTAMP
 );
 
 CREATE TABLE MEMBER (
     member_id INTEGER PRIMARY KEY,
     organization_id INTEGER,
-    firstName VARCHAR,
-    lastName VARCHAR,
+    firstName VARCHAR2(20),
+    lastName VARCHAR2(35),
     created_at TIMESTAMP
 );
 
 CREATE TABLE MEETING_ROOM (
     meeting_room_id INTEGER PRIMARY KEY,
-    meeting_room_name VARCHAR,
+    meeting_room_name VARCHAR2(30),
     organization_id INTEGER,
-    workingFrom VARCHAR(8), -- Запазваме като стринг понебе ORACLE не предоставя тип за "време"
-    workingTo VARCHAR(8)
+    workingFrom VARCHAR2(8), -- Запазваме като стринг понебе ORACLE не предоставя тип за "време"
+    workingTo VARCHAR2(8)
 );
 
 CREATE TABLE BOOKING (
@@ -31,7 +31,7 @@ CREATE TABLE BOOKING (
 
 CREATE TABLE AMENITY (
     amenity_id INTEGER PRIMARY KEY,
-    name VARCHAR
+    name VARCHAR2(30)
 );
 
 CREATE TABLE ROOM_AMENITY (
