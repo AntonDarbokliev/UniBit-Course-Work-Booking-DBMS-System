@@ -16,8 +16,8 @@ CREATE TABLE MEETING_ROOM (
     meeting_room_id INTEGER PRIMARY KEY,
     meeting_room_name VARCHAR,
     organization_id INTEGER,
-    workingFrom TIMESTAMP,
-    workingTo TIMESTAMP
+    workingFrom VARCHAR(8), -- Запазваме като стринг понебе ORACLE не предоставя тип за "време"
+    workingTo VARCHAR(8)
 );
 
 CREATE TABLE BOOKING (
